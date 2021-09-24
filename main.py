@@ -13,24 +13,28 @@ class FallingObject(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0,670)
         self.rect.y = 0
-
+        self.time_on_floor = 0
     def setImage(self, graphicSelected):
         allFallingObjectsImage = pygame.image.load(graphicSelected)
         self.image.blit(allFallingObjectsImage,(0,0))
 
 
     def moveFallingObjects(self, distance):
-        if self.rect.y <= 670:
+        if self.rect.y <= 470:
             self.rect.y = self.rect.y  + distance
             
     def deleteFallingObjects(self, oldscore):
-        if self.rect.y > 470:
+        if self.rect.y > 470 and self.time_on_floor >= 50:
             self.kill()
             newscore = oldscore + 1
 
             return newscore
+        elif self.rect.y > 470:
+            self.time_on_floor += 1
+            return oldscore
 
         else:
+
             return oldscore
 
 
@@ -42,7 +46,7 @@ class Character(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.x = 310
-        self.rect.y = 420
+        self.rect.y = 405
 
         self.image.blit(pygame.image.load("Superhero.png"),(0,0))
 
@@ -67,7 +71,7 @@ def titleScreen(flash):
 
         screen.fill((40,120,40))
         welcone_msg = welcome_font.render(str("WELCOME"),1, white)
-        enter_msg = font.render(str("PRESS ENTER TO CONTINUE"),1, white)
+        enter_msg = font.render(str("PRESS SPACE TO CONTINUE"),1, white)
         screen.blit(welcone_msg, (190,100))
         if flash >= 12:
 
@@ -108,7 +112,7 @@ score = 0
 
 move = 10
 
-amount = 1000
+amount = 1200
 
 flash = 0
 
@@ -137,10 +141,10 @@ while not done:
         nextObject.setImage("Apple.png")
         allFallingObjects.add(nextObject)
         nextApple = pygame.time.get_ticks() + amount
-        move += 0.1
+        move += 0.05
         if amount > 200:
 
-            amount -= 35
+            amount -= 25
 
 
     for eachObject in (allFallingObjects.sprites()):
